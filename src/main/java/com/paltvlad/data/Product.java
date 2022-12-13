@@ -6,7 +6,8 @@ public class Product {
     private String title;
     private double price;
 
-    public Product(){}
+    public Product() {
+    }
 
     public Product(Long id, String title, double price) {
         this.id = id;
@@ -40,6 +41,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return id + " " + title + " "+ price;
+        return id + " " + title + " " + price;
     }
 }
