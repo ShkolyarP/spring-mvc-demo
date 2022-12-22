@@ -48,4 +48,16 @@ public class ProductService {
 
         }
     }
+
+    public String customer(Long id) {
+        try (Session session = sfu.getSession()) {
+
+            session.beginTransaction();
+            Customer customer = session.get(Customer.class, id);
+            System.out.println(customer);
+
+            session.getTransaction().commit();
+            return customer.toString();
+        }
+    }
 }

@@ -21,6 +21,10 @@ public class MainController {
         productService.orderListByCustomers(id);
     }
 
+    @GetMapping("/customers/{id}")
+    public String customer(@PathVariable Long id) {
+        return productService.customer(id);
+    }
 
 
 //    @GetMapping("/products")
