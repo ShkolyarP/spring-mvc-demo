@@ -28,5 +28,35 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     }
 
+    $scope.addProduct = function () {
+        $http({
+            url: contextPath + '/products',
+            method: 'post',
+            params: {
+                title: $scope.newProduct.title,
+                price: $scope.newProduct.price,
+
+            }
+        }).then(function (response) {
+            $scope.newProduct = null;
+            $scope.loadProducts();
+        });
+    }
+
+    $scope.priceFilter = function () {
+        $http({
+            url: contextPath + '/products/find_by_price',
+            method: 'GET',
+            params: {
+                min: $scope.p.min,
+                max: $scope.p.max
+
+            }
+        }).then(function (response) {
+            $scope.p = null;
+            $scope.ProductList = response.data;
+        });
+    }
+
     $scope.loadProducts();
 });
