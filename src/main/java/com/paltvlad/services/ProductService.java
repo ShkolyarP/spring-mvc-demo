@@ -2,7 +2,12 @@ package com.paltvlad.services;
 
 import com.paltvlad.model.Product;
 import com.paltvlad.repositories.ProductRepository;
+import com.paltvlad.repositories.specifications.ProductsSpecifications;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +23,24 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+
+    public Page<Product> find(Double minPrice, Double maxPrice, String title_part, Integer page) {
+
+        Specification<Product> spec = Specification.where(null);
+
+        if (minPrice != null) {
+            spec = spec.and(ProductsSpecifications.priceGreaterOrEqualsThan(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductsSpecifications.priceLessOrEqualsThan(maxPrice));
+        }
+        if (title_part != null) {
+            spec = spec.and(ProductsSpecifications.titleLike(title_part));
+        }
+
+        return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
+    }
+
 
     @Transactional
     public void saveNewProduct(String title, double price, Long category_id) {
@@ -51,12 +74,9 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> findByMinPrice(double minPrice) {
-        return productRepository.findAllByPriceGreaterThanEqual(minPrice);
-    }
 
-
-    public List<Product> findByPrice(double min, double max) {
-        return productRepository.findAllByPriceBetween(min, max);
+    public Product save(Product product) {
+        product.setCategory(categoryService.findById(1L).get());
+        return productRepository.save(product);
     }
 }
