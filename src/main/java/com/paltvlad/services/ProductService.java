@@ -1,18 +1,17 @@
 package com.paltvlad.services;
 
-import com.paltvlad.model.Product;
+import com.paltvlad.dto.ProductDto;
+import com.paltvlad.exeptions.ResourceNotFoundException;
+import com.paltvlad.entities.Product;
 import com.paltvlad.repositories.ProductRepository;
 import com.paltvlad.repositories.specifications.ProductsSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
 
-    public Page<Product> find(Double minPrice, Double maxPrice, String title_part, Integer page) {
+    public Page<Product> findAll(Double minPrice, Double maxPrice, String partTitle, Integer page) {
 
         Specification<Product> spec = Specification.where(null);
 
@@ -34,8 +33,8 @@ public class ProductService {
         if (maxPrice != null) {
             spec = spec.and(ProductsSpecifications.priceLessOrEqualsThan(maxPrice));
         }
-        if (title_part != null) {
-            spec = spec.and(ProductsSpecifications.titleLike(title_part));
+        if (partTitle != null) {
+            spec = spec.and(ProductsSpecifications.titleLike(partTitle));
         }
 
         return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
@@ -66,17 +65,18 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    @Transactional
-    public void changePrice(Long id, Integer percent) {
-        Product product = productRepository.findById(id).get();
-
-        product.setPrice(new BigDecimal(product.getPrice() + product.getPrice() * percent / 100).setScale(2, RoundingMode.HALF_EVEN).doubleValue());
-        productRepository.save(product);
-    }
-
 
     public Product save(Product product) {
         product.setCategory(categoryService.findById(1L).get());
         return productRepository.save(product);
+    }
+
+    @Transactional
+    public Product update(ProductDto productDto) {
+        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Невозможно обновить продукт, не найден в базе, id: " + productDto.getId()));
+        product.setPrice(product.getPrice());
+        product.setTitle(product.getTitle());
+        product.setCategory(productDto.getCategory());
+        return product;
     }
 }

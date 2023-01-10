@@ -18,18 +18,18 @@
     <h3>Фильтр по цене</h3>
     <form novalidate class="was-validated row" ng-submit="loadProducts()">
         <div class="mb-3 col">
-            <label for="filterTitle" class="form-label">Название</label>
+            <label for="filterTitle" class="form-label">Название продукта</label>
             <input type="text" class="form-control" id="filterTitle" value="" required="" placeholder="Название"
                    ng-model="filter.title_part">
         </div>
         <div class="mb-3 col">
-            <label for="filterMinPrice" class="form-label">min</label>
+            <label for="filterMinPrice" class="form-label">Мин. цена</label>
             <input type="number" class="form-control" id="filterMinPrice" value="" required="" placeholder="0.0"
                    step="0.01" min="0" max="100000000" ng-model="filter.min_price">
         </div>
 
         <div class="mb-3 col">
-            <label for="filterMaxPrice" class="form-label">max</label>
+            <label for="filterMaxPrice" class="form-label">Макс. цена</label>
             <input type="number" class="form-control" id="filterMaxPrice" value="" required="" placeholder="0.0"
                    step="0.01" min="0" max="100000000" ng-model="filter.max_price">
         </div>
@@ -40,47 +40,53 @@
     </form>
 
 
-    <h3>Список продуктов</h3>
+    <h3>Каталог продуктов</h3>
     <table class="table table-hover">
         <thead class="table-dark">
         <tr>
             <td>ID</td>
             <td>Наименование</td>
             <td>Цена</td>
-            <td>Delete</td>
+            <td>Добавить в корзину</td>
+
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="p in ProductList">
+        <tr ng-repeat="p in ProductsPage.content">
             <td>{{p.id}}</td>
             <td>{{p.title}}</td>
             <td>{{p.price}}</td>
             <td>
-                <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Delete</button>
-
+            <button class="btn btn-danger" ng-click="addToCart(p.id)">в корзину</button>
             </td>
         </tr>
         </tbody>
     </table>
+    <h3>Корзина</h3>
+    <table class="table table-hover">
+        <thead class="table-dark">
+        <tr>
+            <td>ID</td>
+            <td>Наименование</td>
+            <td>Цена</td>
+            <td>Количество</td>
+            <td>Сумма</td>
 
-    <h3>Добавить продукт</h3>
-    <form class="was-validated row" ng-submit="addProduct()">
-        <div class="mb-3 col">
-            <label for="validationServer01" class="form-label">Title</label>
-            <input type="text" class="form-control is-valid" id="validationServer01" value="" required=""
-                   ng-model="newProduct.title">
-        </div>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="p in Cart">
+            <td>{{p.id}}</td>
+            <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
+            <td>{{p.amount}}</td>
+            <td>{{p.sum}}</td>
 
-        <div class="mb-3 col">
-            <label for="validationServer02" class="form-label">Price</label>
-            <input type="number" class="form-control is-valid" id="validationServer02" value="" required=""
-                   placeholder="0.0" step="0.01" min="0" max="100000000" ng-model="newProduct.price">
-        </div>
+        </tr>
+        </tbody>
+    </table>
 
-        <div class="mb-3">
-            <button class="btn btn-primary" type="submit">Add</button>
-        </div>
-    </form>
+
 </div>
 
 

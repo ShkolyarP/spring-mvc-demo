@@ -1,6 +1,6 @@
 package com.paltvlad.repositories.specifications;
 
-import com.paltvlad.model.Product;
+import com.paltvlad.entities.Product;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ProductsSpecifications {
@@ -13,8 +13,8 @@ public class ProductsSpecifications {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceMax);
     }
 
-    public static Specification<Product> titleLike(String title) {
-        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), String.format("%%%s%%", title));
+    public static Specification<Product> titleLike(String titlePart) {
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), String.format("%%%s%%", titlePart));
     }
 
 
