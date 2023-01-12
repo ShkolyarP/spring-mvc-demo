@@ -1,16 +1,16 @@
 package com.paltvlad.controllers;
 
 
+import com.paltvlad.converters.ProductConverter;
 import com.paltvlad.dto.ProductDto;
-import com.paltvlad.model.Category;
-import com.paltvlad.model.Product;
+import com.paltvlad.exeptions.ResourceNotFoundException;
+import com.paltvlad.entities.Product;
 import com.paltvlad.services.ProductService;
 
+import com.paltvlad.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +18,8 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductConverter productConverter;
+    private final ProductValidator productValidator;
 
     @GetMapping
     public Page<ProductDto> getAllProducts(
@@ -31,22 +33,28 @@ public class ProductController {
             page = 1;
         }
 
-        return productService.find(minPrice, maxPrice, title_part, page).map(
-                p -> new ProductDto(p)
+        return productService.findAll(minPrice, maxPrice, title_part, page).map(
+                p -> productConverter.EntityToDto(p)
         );
     }
 
     @GetMapping("/{id}")
-    public Product findById(@PathVariable Long id) {
-        return productService.findById(id).get();
+    public ProductDto findById(@PathVariable Long id) {
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
+        return productConverter.EntityToDto(product);
     }
 
 
     @PostMapping
-    public ProductDto addProduct(@RequestBody Product product) {
+    public ProductDto saveNewProduct(@RequestBody ProductDto productDto) {
+
+        productValidator.validate(productDto);
+        Product product = productConverter.dtoToEntity(productDto);
 
         product.setId(null);
-        return new ProductDto(productService.save(product));
+        product = productService.save(product);
+        return productConverter.EntityToDto(product);
+
     }
 
 
@@ -56,12 +64,12 @@ public class ProductController {
     }
 
     @PutMapping
-    public ProductDto updateProduct(@RequestBody Product product) {
-        return new ProductDto(productService.save(product));
+    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+        productValidator.validate(productDto);
+        Product product = productService.update(productDto);
+
+        return productConverter.EntityToDto(product);
     }
 
-//    @PatchMapping("/price")
-//    public void changePrice(@RequestBody Long id, @RequestBody Integer percent) {
-//        productService.changePrice(id, percent);
-//    }
+
 }

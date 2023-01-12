@@ -1,4 +1,4 @@
-package com.paltvlad.model;
+package com.paltvlad.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;

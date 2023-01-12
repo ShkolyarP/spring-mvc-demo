@@ -13,28 +13,17 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             }
         })
             .then(function (response) {
-                $scope.ProductList = response.data.content;
+                $scope.ProductsPage = response.data;
                 $scope.filter = null
             });
     };
 
-    $scope.deleteProduct = function (id) {
-        $http.delete(contextPath + '/products/' + id)
+    $scope.addToCart = function (id) {
+        $http.get(contextPath + '/cart/' + id)
             .then(function (response) {
-                $scope.loadProducts();
+                $scope.Cart = response.data;
             });
     }
-
-
-    $scope.addProduct = function () {
-        console.log($scope.newProduct)
-        $http.post(contextPath + '/products', $scope.newProduct)
-            .then(function (response) {
-                $scope.loadProducts();
-                $scope.newProduct = null;
-            });
-    }
-
 
     $scope.loadProducts();
 });

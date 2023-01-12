@@ -1,6 +1,6 @@
 package com.paltvlad.controllers;
 
-import com.paltvlad.model.Category;
+import com.paltvlad.entities.Category;
 import com.paltvlad.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
