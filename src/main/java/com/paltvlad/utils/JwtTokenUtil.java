@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,10 +15,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Service
 public class JwtTokenUtil {
-    @Value("{jwt.secret}")
+    @Value("${jwt.secret}")
     private String secret;
-    @Value("{jwt.lifetime}")
+    @Value("${jwt.lifetime}")
     private Integer jwtLifetime;
 
     public String generateToken(UserDetails userDetails) {

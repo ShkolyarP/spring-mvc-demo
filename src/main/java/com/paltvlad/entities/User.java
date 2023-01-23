@@ -6,11 +6,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Data
-@Table
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +37,6 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Collection<Role> roles;
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 }

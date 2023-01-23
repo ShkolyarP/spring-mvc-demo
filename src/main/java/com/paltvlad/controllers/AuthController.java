@@ -1,9 +1,9 @@
 package com.paltvlad.controllers;
 
+import com.paltvlad.configs.SecurityUserService;
 import com.paltvlad.dto.JwtRequest;
 import com.paltvlad.dto.JwtResponse;
 import com.paltvlad.exeptions.AppError;
-import com.paltvlad.services.UserService;
 import com.paltvlad.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
+    private final SecurityUserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
 
