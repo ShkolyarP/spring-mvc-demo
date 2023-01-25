@@ -1,0 +1,12 @@
+POST http://localhost:8189/app/auth
+Content-Type: application/json
+
+{
+  "username": "bob",
+  "password": "100"
+}
+
+###
+
+GET http://localhost:8189/app/api/v1/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib2IiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImV4cCI6MTY3NDQ4NDU1OCwiaWF0IjoxNjc0NDgwOTU4fQ.gNwzEqQAq2wDEv1iYljlXlz04TTz6oYYraRJ-v-HP8o
